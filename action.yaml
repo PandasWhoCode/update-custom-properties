@@ -1,0 +1,16 @@
+name: 'Custom Properties Update Action'
+description: 'Updates custom properties in repos'
+author: 'Andrew Brandt <andrew.brandt@hashgraph.com>'
+branding:
+  icon: 'check-circle'
+  color: 'blue'
+
+inputs:
+  file:
+    description: 'The YAML file to parse for updating appropriate custom properties'
+    required: true
+    default: ''
+  access_token:
+    description: 'The access token to use for updating custom properties in the organization'
+    required: false
+    default: ''
