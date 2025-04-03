@@ -3,14 +3,41 @@ description: 'Updates custom properties in repos'
 author: 'Andrew Brandt <andrew.brandt@hashgraph.com>'
 branding:
   icon: 'check-circle'
-  color: 'blue'
+  color: 'purple'
 
 inputs:
-  file:
-    description: 'The YAML file to parse for updating appropriate custom properties'
+  yaml_file:
+    description: 'Path to the YAML file'
     required: true
-    default: ''
-  access_token:
-    description: 'The access token to use for updating custom properties in the organization'
-    required: false
-    default: ''
+    default: 'repos.yaml'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+        wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
+        chmod +x /usr/local/bin/yq
+      shell: bash
+
+    - name: Read YAML and update repository property
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        YAML_FILE="${{ inputs.yaml_file }}"
+        ORG=$(yq e '.org' "$YAML_FILE")
+        REPOS=$(yq e '.repositories[].name' "$YAML_FILE")
+
+        for REPO in $REPOS; do
+          LAST_MODIFIED=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          echo "Updating $ORG/$REPO with last-date-modified: $LAST_MODIFIED"
+
+          # Update repository custom property using GitHub API
+          curl -X PATCH -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/$ORG/$REPO \
+            -d "{\"custom_properties\": {\"last-date-modified\": \"$LAST_MODIFIED\"}}"
+        done
+      shell: bash
