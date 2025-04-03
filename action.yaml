@@ -18,8 +18,7 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y jq
-        wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/local/bin/yq
-        chmod +x /usr/local/bin/yq
+        sudo snap install yq
       shell: bash
 
     - name: Validate YAML file
@@ -35,17 +34,35 @@ runs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         YAML_FILE="${{ inputs.yaml_file }}"
+
         ORG=$(yq e '.org' "$YAML_FILE")
         REPOS=$(yq e '.repositories[].name' "$YAML_FILE")
+
+        if [[ -z "$ORG" ]]; then
+          echo "Error: Organization name is empty!"
+          exit 1
+        fi
+
+        if [[ -z "$REPOS" ]]; then
+          echo "Error: No repositories found in YAML!"
+          exit 1
+        fi
 
         for REPO in $REPOS; do
           LAST_MODIFIED=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           echo "Updating $ORG/$REPO with last-date-modified: $LAST_MODIFIED"
 
-          # Update repository custom property using GitHub API
-          curl -X PATCH -H "Authorization: token $GH_TOKEN" \
+          RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X PATCH \
+            -H "Authorization: token $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/$ORG/$REPO \
-            -d "{\"custom_properties\": {\"last-date-modified\": \"$LAST_MODIFIED\"}}"
+            -d "{\"custom_properties\": {\"last-date-modified\": \"$LAST_MODIFIED\"}}")
+
+          if [[ "$RESPONSE" -ne 200 ]]; then
+            echo "Error: Failed to update $ORG/$REPO. Response Code: $RESPONSE"
+            cat response.json
+            exit 1
+          fi
         done
       shell: bash
+
