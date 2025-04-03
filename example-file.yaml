@@ -1,0 +1,4 @@
+org: my-example-org
+repositories:
+  - name: my-example-repo
+    last-date-modified: "2025-04-03"
