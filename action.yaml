@@ -20,24 +20,33 @@ runs:
       run: |
         git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
 
+    - name: Install tools
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y jq yq
+
     - name: Parse repo-properties.yaml and export metadata
       shell: bash
       run: |
         REPO_NAME=$(basename "${GITHUB_REPOSITORY}")
         YAML_FILE="governance-repo/repo-properties.yaml"
 
-        if ! command -v yq >/dev/null 2>&1; then
-          echo "Installing yq..."
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
-        fi
+        # Get all fields for the matching repo (as a JSON object)
+        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
+        echo "Current JSON file is:"
+        echo ${JSON}
+        
+        # Remove the "name" field (not a property)
+        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
+        echo "Current JSON_WITHOUT_NAME file is:"
+        echo ${JSON_WITHOUT_NAME}
 
-        LAST_UPDATE_BY=$(yq ".repositories[] | select(.name == \"${REPO_NAME}\") | .\"last-update-by\"" "$YAML_FILE")
-        LAST_DATE_MODIFIED=$(yq ".repositories[] | select(.name == \"${REPO_NAME}\") | .\"last-date-modified\"" "$YAML_FILE")
+        echo "Setting these custom properties:"
+        echo "${JSON_WITHOUT_NAME}"
 
-        echo "last-update-by=${LAST_UPDATE_BY}" >> $GITHUB_ENV
-        echo "last-date-modified=${LAST_DATE_MODIFIED}" >> $GITHUB_ENV
-
-        echo "Custom properties set: "
-        echo "  last-update-by=${LAST_UPDATE_BY}"
-        echo "  last-date-modified=${LAST_DATE_MODIFIED}"
+        curl -X PATCH "https://api.github.com/repos/$OWNER/$REPO_NAME/properties" \
+          -H "Authorization: Bearer $GH_TOKEN" \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          -H "Content-Type: application/json" \
+          -d "$JSON_WITHOUT_NAME"
