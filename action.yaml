@@ -1,68 +1,43 @@
 name: 'Custom Properties Update Action'
-description: 'Updates custom properties in repos'
+description: 'Updates the custom properties in a repository'
 author: 'Andrew Brandt <andrew.brandt@hashgraph.com>'
 branding:
   icon: 'check-circle'
   color: 'purple'
 
 inputs:
-  yaml_file:
-    description: 'Path to the YAML file'
+  governance-repo-url:
+    description: 'Git URL of the governance repo'
     required: true
-    default: 'repos.yaml'
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: Install dependencies
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Clone governance repo
       run: |
-        sudo apt-get update
-        sudo apt-get install -y jq
-        sudo snap install yq
+        git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
+
+    - name: Parse repo-properties.yaml and export metadata
       shell: bash
-
-    - name: Validate YAML file
       run: |
-        if [[ ! -f "${{ inputs.yaml_file }}" ]]; then
-          echo "Error: YAML file not found!"
-          exit 1
-        fi
-      shell: bash
+        REPO_NAME=$(basename "${GITHUB_REPOSITORY}")
+        YAML_FILE="governance-repo/repo-properties.yaml"
 
-    - name: Read YAML and update repository property
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        YAML_FILE="${{ inputs.yaml_file }}"
-
-        ORG=$(yq e '.org' "$YAML_FILE")
-        REPOS=$(yq e '.repositories[].name' "$YAML_FILE")
-
-        if [[ -z "$ORG" ]]; then
-          echo "Error: Organization name is empty!"
-          exit 1
+        if ! command -v yq >/dev/null 2>&1; then
+          echo "Installing yq..."
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
         fi
 
-        if [[ -z "$REPOS" ]]; then
-          echo "Error: No repositories found in YAML!"
-          exit 1
-        fi
+        LAST_UPDATE_BY=$(yq ".repositories[] | select(.name == \"${REPO_NAME}\") | .\"last-update-by\"" "$YAML_FILE")
+        LAST_DATE_MODIFIED=$(yq ".repositories[] | select(.name == \"${REPO_NAME}\") | .\"last-date-modified\"" "$YAML_FILE")
 
-        for REPO in $REPOS; do
-          LAST_MODIFIED=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          echo "Updating $ORG/$REPO with last-date-modified: $LAST_MODIFIED"
+        echo "last-update-by=${LAST_UPDATE_BY}" >> $GITHUB_ENV
+        echo "last-date-modified=${LAST_DATE_MODIFIED}" >> $GITHUB_ENV
 
-          RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X PATCH \
-            -H "Authorization: token $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/$ORG/$REPO \
-            -d "{\"custom_properties\": {\"last-date-modified\": \"$LAST_MODIFIED\"}}")
-
-          if [[ "$RESPONSE" -ne 200 ]]; then
-            echo "Error: Failed to update $ORG/$REPO. Response Code: $RESPONSE"
-            cat response.json
-            exit 1
-          fi
-        done
-      shell: bash
-
+        echo "Custom properties set: "
+        echo "  last-update-by=${LAST_UPDATE_BY}"
+        echo "  last-date-modified=${LAST_DATE_MODIFIED}"
