@@ -10,6 +10,11 @@ inputs:
     description: 'Git URL of the governance repo'
     required: true
 
+permissions:
+  id-token: read
+  contents: read
+  actions: read
+
 runs:
   using: "composite"
   steps:
