@@ -9,6 +9,10 @@ inputs:
   governance-repo-url:
     description: 'Git URL of the governance repo'
     required: true
+  token:
+    description: 'Personal Access Token'
+    required: true
+
 
 permissions:
   contents: read
@@ -17,14 +21,17 @@ permissions:
 runs:
   using: "composite"
   steps:
-    - name: Clone governance repo
-      run: |
-        git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
-        echo "Cloned governance repo"
-        echo "Running pwd now"
-        pwd
-        echo "Running ls now"
-        ls -la
+    - name: Echo hello world
+      run: echo "Hello World"
+#
+#    - name: Clone governance repo
+#      run: |
+#        git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
+#        echo "Cloned governance repo"
+#        echo "Running pwd now"
+#        pwd
+#        echo "Running ls now"
+#        ls -la
 
 #    - name: Install tools
 #      run: |
