@@ -13,6 +13,9 @@ inputs:
     description: 'Personal Access Token'
     required: true
 
+defaults:
+  run:
+    shell: bash
 
 permissions:
   contents: read
