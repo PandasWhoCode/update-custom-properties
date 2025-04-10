@@ -13,9 +13,6 @@ inputs:
     description: 'Personal Access Token'
     required: true
 
-defaults:
-  run:
-    shell: bash
 
 permissions:
   contents: read
@@ -23,7 +20,8 @@ permissions:
 
 runs:
   using: "composite"
-  shell: bash
+
   steps:
     - name: Echo hello world
+      shell: bash
       run: echo "Hello World"
