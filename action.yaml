@@ -23,6 +23,7 @@ permissions:
 
 runs:
   using: "composite"
+  shell: bash
   steps:
     - name: Echo hello world
       run: echo "Hello World"
