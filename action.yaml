@@ -11,24 +11,18 @@ inputs:
     required: true
 
 permissions:
-  id-token: read
   contents: read
   actions: read
 
 runs:
   using: "composite"
   steps:
-    - name: Checkout Code
-      id: checkout_code
-      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      with:
-        fetch-depth: "0"
-        ref: "main"
-
     - name: Clone governance repo
       run: |
         git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
         echo "Cloned governance repo"
+        echo "Running pwd now"
+        pwd
         echo "Running ls now"
         ls -la
 
