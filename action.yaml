@@ -1,68 +1,64 @@
 name: 'Custom Properties Update Action'
-description: 'Updates custom properties in repos'
+description: 'Updates the custom properties in a repository'
 author: 'Andrew Brandt <andrew.brandt@hashgraph.com>'
 branding:
   icon: 'check-circle'
   color: 'purple'
 
 inputs:
-  yaml_file:
-    description: 'Path to the YAML file'
+  governance-repo-url:
+    description: 'Git URL of the governance repo'
     required: true
-    default: 'repos.yaml'
+
+permissions:
+  id-token: read
+  contents: read
+  actions: read
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
-    - name: Install dependencies
+    - name: Checkout Code
+      id: checkout_code
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      with:
+        fetch-depth: "0"
+        ref: "main"
+
+    - name: Clone governance repo
       run: |
-        sudo apt-get update
-        sudo apt-get install -y jq
-        sudo snap install yq
-      shell: bash
+        git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
+        echo "Cloned governance repo"
+        echo "Running ls now"
+        ls -la
 
-    - name: Validate YAML file
-      run: |
-        if [[ ! -f "${{ inputs.yaml_file }}" ]]; then
-          echo "Error: YAML file not found!"
-          exit 1
-        fi
-      shell: bash
-
-    - name: Read YAML and update repository property
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        YAML_FILE="${{ inputs.yaml_file }}"
-
-        ORG=$(yq e '.org' "$YAML_FILE")
-        REPOS=$(yq e '.repositories[].name' "$YAML_FILE")
-
-        if [[ -z "$ORG" ]]; then
-          echo "Error: Organization name is empty!"
-          exit 1
-        fi
-
-        if [[ -z "$REPOS" ]]; then
-          echo "Error: No repositories found in YAML!"
-          exit 1
-        fi
-
-        for REPO in $REPOS; do
-          LAST_MODIFIED=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          echo "Updating $ORG/$REPO with last-date-modified: $LAST_MODIFIED"
-
-          RESPONSE=$(curl -s -o response.json -w "%{http_code}" -X PATCH \
-            -H "Authorization: token $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            https://api.github.com/repos/$ORG/$REPO \
-            -d "{\"custom_properties\": {\"last-date-modified\": \"$LAST_MODIFIED\"}}")
-
-          if [[ "$RESPONSE" -ne 200 ]]; then
-            echo "Error: Failed to update $ORG/$REPO. Response Code: $RESPONSE"
-            cat response.json
-            exit 1
-          fi
-        done
-      shell: bash
-
+#    - name: Install tools
+#      run: |
+#        sudo apt-get update
+#        sudo apt-get install -y jq yq
+#
+#    - name: Parse repo-properties.yaml and export metadata
+#      shell: bash
+#      run: |
+#        REPO_NAME=$(basename "${GITHUB_REPOSITORY}")
+#        YAML_FILE="governance-repo/repo-properties.yaml"
+#
+#        # Get all fields for the matching repo (as a JSON object)
+#        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
+#        echo "Current JSON file is:"
+#        echo ${JSON}
+#
+#        # Remove the "name" field (not a property)
+#        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
+#        echo "Current JSON_WITHOUT_NAME file is:"
+#        echo ${JSON_WITHOUT_NAME}
+#
+#        echo "Setting these custom properties:"
+#        echo "${JSON_WITHOUT_NAME}"
+#
+#        curl -X PATCH "https://api.github.com/repos/$OWNER/$REPO_NAME/properties" \
+#          -H "Authorization: Bearer $GH_TOKEN" \
+#          -H "Accept: application/vnd.github+json" \
+#          -H "X-GitHub-Api-Version: 2022-11-28" \
+#          -H "Content-Type: application/json" \
+#          -d "$JSON_WITHOUT_NAME"
