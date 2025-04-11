@@ -38,13 +38,10 @@ runs:
 
     - name: Print the current github information
       shell: bash
-      env:
-        GH_TOKEN: ${{ inputs.token }}  # Must have `repo` scope
-        REPO_NAME: ${{ github.event.repository.name }}
-        OWNER: ${{ github.repository_owner }}
       run: |
-        echo "Current variables:
-        echo "Repo name: ${REPO_NAME}"
-        echo "Repo owner: ${OWNER}"
+        echo "Current variables:"
+        echo "Full repo org/repo name: ${{ github.repository }}"
+        echo "Repo name: ${{ github.event.repository.name }}"
+        echo "Repo owner: ${{ github.repository_owner }}"
     
         
