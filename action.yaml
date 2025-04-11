@@ -39,7 +39,7 @@ runs:
     - name: Print the current github information
       shell: bash
       env:
-        GH_TOKEN: ${{ secrets.REPO_WRITE_TOKEN }}  # Must have `repo` scope
+        GH_TOKEN: ${{ inputs.token }}  # Must have `repo` scope
         REPO_NAME: ${{ github.event.repository.name }}
         OWNER: ${{ github.repository_owner }}
       run: |
