@@ -13,9 +13,6 @@ inputs:
     description: 'Personal Access Token'
     required: true
 
-defaults:
-  run:
-    shell: bash
 
 permissions:
   contents: read
@@ -30,6 +27,7 @@ runs:
       run: echo "Hello World"
 
     - name: Clone governance repo
+      shell: bash
       run: |
         git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
         echo "Cloned governance repo"
