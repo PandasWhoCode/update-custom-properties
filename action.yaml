@@ -59,6 +59,7 @@ runs:
     - name: Parse repo-properties.yaml and export metadata
       shell: bash
       run: |
+        cd governance-repo
         REPO_NAME=${{ github.event.repository.name }}
         YAML_FILE="governance-repo/repo-properties.yaml"
 
