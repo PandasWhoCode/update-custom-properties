@@ -55,7 +55,7 @@ runs:
         echo "repo name:"
         echo ${REPO_NAME}
         
-        echo "yaml file:
+        echo "yaml file:"
         echo ${YAML_FILE}
         
 #        # Get all fields for the matching repo (as a JSON object)
