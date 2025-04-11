@@ -26,16 +26,6 @@ runs:
       shell: bash
       run: echo "Hello World"
 
-    - name: Clone governance repo
-      shell: bash
-      run: |
-        git clone --depth 1 "${{ inputs.governance-repo-url }}" governance-repo
-        echo "Cloned governance repo"
-        echo "Running pwd now"
-        pwd
-        echo "Running ls now"
-        ls -la
-
     - name: Print the current github information
       shell: bash
       run: |
@@ -43,12 +33,6 @@ runs:
         echo "Full repo org/repo name: ${{ github.repository }}"
         echo "Repo owner: ${{ github.repository_owner }}"
         echo "Repo name: ${{ github.event.repository.name }}"
-
-    - name: Print out the repo props file from governance repo
-      shell: bash
-      run: |
-        cd governance-repo
-        cat repo-properties.yaml
 
     - name: Install tools
       shell: bash
@@ -59,7 +43,6 @@ runs:
     - name: Parse repo-properties.yaml and export metadata
       shell: bash
       run: |
-        cd governance-repo
         REPO_NAME=${{ github.event.repository.name }}
         YAML_FILE="repo-properties.yaml"
         
@@ -75,10 +58,10 @@ runs:
         echo "yaml file:
         echo ${YAML_FILE}
         
-        # Get all fields for the matching repo (as a JSON object)
-        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
-        echo "Current JSON file is:"
-        echo ${JSON}
+#        # Get all fields for the matching repo (as a JSON object)
+#        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
+#        echo "Current JSON file is:"
+#        echo ${JSON}
 
 #        # Remove the "name" field (not a property)
 #        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
