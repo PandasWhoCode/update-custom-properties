@@ -61,20 +61,32 @@ runs:
       run: |
         cd governance-repo
         REPO_NAME=${{ github.event.repository.name }}
-        YAML_FILE="governance-repo/repo-properties.yaml"
-
+        YAML_FILE="repo-properties.yaml"
+        
+        echo "pwd here"
+        pwd
+        
+        echo "ls here"
+        ls
+        
+        echo "repo name:"
+        echo ${REPO_NAME}
+        
+        echo "yaml file:
+        echo ${YAML_FILE}
+        
         # Get all fields for the matching repo (as a JSON object)
         JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
         echo "Current JSON file is:"
         echo ${JSON}
 
-        # Remove the "name" field (not a property)
-        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
-        echo "Current JSON_WITHOUT_NAME file is:"
-        echo ${JSON_WITHOUT_NAME}
-
-        echo "Setting these custom properties:"
-        echo "${JSON_WITHOUT_NAME}"
+#        # Remove the "name" field (not a property)
+#        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
+#        echo "Current JSON_WITHOUT_NAME file is:"
+#        echo ${JSON_WITHOUT_NAME}
+#
+#        echo "Setting these custom properties:"
+#        echo "${JSON_WITHOUT_NAME}"
 #
 #        curl -X PATCH "https://api.github.com/repos/$OWNER/$REPO_NAME/properties" \
 #          -H "Authorization: Bearer $GH_TOKEN" \
