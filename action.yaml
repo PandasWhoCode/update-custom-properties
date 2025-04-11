@@ -41,7 +41,12 @@ runs:
       run: |
         echo "Current variables:"
         echo "Full repo org/repo name: ${{ github.repository }}"
-        echo "Repo name: ${{ github.event.repository.name }}"
         echo "Repo owner: ${{ github.repository_owner }}"
-    
+        echo "Repo name: ${{ github.event.repository.name }}"
+
+    - name: Print out the repo props file from governance repo
+      shell: bash
+      run: |
+        cd governance-repo
+        cat repo-properties.yaml
         
