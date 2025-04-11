@@ -35,3 +35,16 @@ runs:
         pwd
         echo "Running ls now"
         ls -la
+
+    - name: Print the current github information
+      shell: bash
+      env:
+        GH_TOKEN: ${{ secrets.REPO_WRITE_TOKEN }}  # Must have `repo` scope
+        REPO_NAME: ${{ github.event.repository.name }}
+        OWNER: ${{ github.repository_owner }}
+      run: |
+        echo "Current variables:
+        echo "Repo name: ${REPO_NAME}"
+        echo "Repo owner: ${OWNER}"
+    
+        
