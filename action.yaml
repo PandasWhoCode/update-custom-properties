@@ -60,8 +60,8 @@ runs:
         yq eval -o=json repo-properties.yaml > JSON_FILE.json
         
         # Confirm the JSON file is correct
-        echo JSON_FILE.json
+        cat JSON_FILE.json
         
-        repo_data=$(jq -r --arg name "$REPO_NAME" '.repositories[] | select(.name == $name)' "JSON_FILE.json")
+        repo_data=$(jq -r --arg name "${REPO_NAME}" '.repositories[] | select(.name == $name)' "JSON_FILE.json")
         echo ${repo_data}
 
