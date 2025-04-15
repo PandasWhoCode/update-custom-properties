@@ -57,30 +57,27 @@ runs:
     - name: Parse repo-properties.yaml and export metadata
       shell: bash
       run: |
-        REPO_NAME=${{ github.event.repository.name }}
+        REPO_NAME="my-example-repo"
         JSON_FILE="repo-properties.json"
         
         # Extract matching repo object using jq
-        repo_data=$(jq -r --arg name "$REPO_NAME" '.repositories[] | select(.name == $name)' "$JSON_FILE")
-        
-        # print out the repo data
-        echo "Repo data is:"
-        echo repo_data
-        
+        repo_data=$(jq -r --arg name "$REPO_NAME" '
+        .repositories[] | select(.name == $name)
+        ' "$JSON_FILE")
+      
         # Optional: exit if not found
         if [[ -z "$repo_data" ]]; then
           echo "Repository '$REPO_NAME' not found."
           exit 1
         fi
-          
-        # Load the key-value pairs into an associative array
+        
+        # Load all key-value pairs except 'name' into an associative array
         declare -A repo_info
         while IFS="=" read -r key value; do
           repo_info["$key"]="$value"
-        done < <(echo "$repo_data" | jq -r 'to_entries[] | "\(.key)=\(.value)"')
-          
-        # Print for debugging
+        done < < (echo "$repo_data" | jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"')
+        
+        # Output for debugging
         for k in "${!repo_info[@]}"; do
           echo "$k: ${repo_info[$k]}"
         done
-
