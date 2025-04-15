@@ -101,50 +101,6 @@ runs:
           echo "$repo_props" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS="=" read -r key value; do
             echo "Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
             # API Call here
-            gh api \
-            --method PATCH \
-            -H "Accept: application/vnd.github+json" \
-            "/repos/$ORG_NAME/$REPO_NAME/properties/$key" \
-            -f "properties[][property_name]=last-update-by" \
-            -f "properties[][value]=example-team"
+            gh api --method PATCH -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/PandasWhoCode/my-example-repo/properties/values -f "properties[][property_name]=last-update-by" -f "properties[][value]=example-team"
           done
         done < "$REPO_NAMES_FILE"
-
-
-
-#        REPO_NAME="my-example-repo"
-#        JSON_FILE="repo-properties.json"
-#
-#        # Extract matching repo object using jq
-#        repo_data=$(jq -r --arg name "$REPO_NAME" '
-#        .repositories[]
-#        | select(.name == $name)
-#        | del(.name)
-#        ' "$JSON_FILE")
-#
-#        echo "Repo data:"
-#        echo ${repo_data}
-#
-#        # Extract all other key-value pairs (excluding "name")
-#        #jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}"
-#        #mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
-#
-#        echo "Values are:"
-#        #echo $values
-
-#        # Optional: exit if not found
-#        if [[ -z "$repo_data" ]]; then
-#          echo "Repository '$REPO_NAME' not found."
-#          exit 1
-#        fi
-#
-#        # Load all key-value pairs except 'name' into an associative array
-#        declare -A repo_info
-#        while IFS="=" read -r key value; do
-#          repo_info["$key"]="$value"
-#        done << (echo "$repo_data" | jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"')
-#
-#        # Output for debugging
-#        for k in "${!repo_info[@]}"; do
-#          echo "$k: ${repo_info[$k]}"
-#        done
