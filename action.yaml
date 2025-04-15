@@ -10,7 +10,6 @@ inputs:
     description: 'Personal Access Token'
     required: true
 
-
 permissions:
   contents: read
   actions: read
@@ -64,6 +63,8 @@ runs:
 
     - name: Set custom properties in repos
       shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
       run: |
         # Input files
         REPO_NAMES_FILE="repo-names.txt"
