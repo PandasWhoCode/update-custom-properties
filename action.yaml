@@ -56,4 +56,4 @@ runs:
         echo ${YAML_FILE}
         
         # Get all fields for the matching repo (as a JSON object)
-        yq -o json repo-properties.yaml
+        JSON_values=$(yq eval -o=json repo-properties.yaml)
