@@ -6,9 +6,6 @@ branding:
   color: 'purple'
 
 inputs:
-  governance-repo-url:
-    description: 'Git URL of the governance repo'
-    required: true
   token:
     description: 'Personal Access Token'
     required: true
@@ -58,10 +55,10 @@ runs:
         echo "yaml file:"
         echo ${YAML_FILE}
         
-#        # Get all fields for the matching repo (as a JSON object)
-#        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
-#        echo "Current JSON file is:"
-#        echo ${JSON}
+        # Get all fields for the matching repo (as a JSON object)
+        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
+        echo "Current JSON file is:"
+        echo ${JSON}
 
 #        # Remove the "name" field (not a property)
 #        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
