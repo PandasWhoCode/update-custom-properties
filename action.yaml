@@ -68,7 +68,6 @@ runs:
         
         echo "Repo data:"
         echo ${repo_data}
-        cat ${repo_data}
         
 #        # Optional: exit if not found
 #        if [[ -z "$repo_data" ]]; then
