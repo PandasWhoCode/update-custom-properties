@@ -56,7 +56,7 @@ runs:
         echo ${YAML_FILE}
         
         # Get all fields for the matching repo (as a JSON object)
-        JSON=$(yq -o=json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
+        JSON=$(yq -o json '.repositories[] | select(.name == strenv(REPO_NAME))' repo-properties.yaml)
         echo "Current JSON file is:"
         echo ${JSON}
 
