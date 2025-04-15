@@ -62,28 +62,62 @@ runs:
         echo "Created repo-names.txt"
         cat repo-names.txt
 
-    - name: Get current repo's
+    - name: Set custom properties in repos
       shell: bash
       run: |
-        REPO_NAME="my-example-repo"
+        # Input files
+        REPO_NAMES_FILE="repo-names.txt"
         JSON_FILE="repo-properties.json"
         
-        # Extract matching repo object using jq
-        repo_data=$(jq -r --arg name "$REPO_NAME" '
-        .repositories[]
-        | select(.name == $name)
-        | del(.name)
-        ' "$JSON_FILE")
+        # Extract the org name once
+        ORG_NAME=$(jq -r '.org' "$JSON_FILE")
+        echo "Org Name: ${ORG_NAME}"
         
-        echo "Repo data:"
-        echo ${repo_data}
+        # Loop over each repo name
+        while IFS= read -r REPO_NAME; do
+          echo "Processing repo: $REPO_NAME"
+          
+          # Extract matching repository object without the 'name' field
+          repo_props=$(jq -r --arg name "$REPO_NAME" '
+            .repositories[]
+            | select(.name == $name)
+            | del(.name)
+            ' "$JSON_FILE")
+          
+          # Check if a match was found
+          if [[ "$repo_props" == "null" || -z "$repo_props" ]]; then
+            echo "No matching data found for $REPO_NAME, skipping..."
+            continue
+          fi
         
-        # Extract all other key-value pairs (excluding "name")
-        #jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}"
-        #mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
-  
-        echo "Values are:"
-        #echo $values
+          # Iterate over key-value pairs and set custom properties
+          echo "$repo_props" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS="=" read -r key value; do
+            echo "Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
+            # API Call here
+          done
+        done < "$REPO_NAMES_FILE"
+
+
+
+#        REPO_NAME="my-example-repo"
+#        JSON_FILE="repo-properties.json"
+#
+#        # Extract matching repo object using jq
+#        repo_data=$(jq -r --arg name "$REPO_NAME" '
+#        .repositories[]
+#        | select(.name == $name)
+#        | del(.name)
+#        ' "$JSON_FILE")
+#
+#        echo "Repo data:"
+#        echo ${repo_data}
+#
+#        # Extract all other key-value pairs (excluding "name")
+#        #jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}"
+#        #mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
+#
+#        echo "Values are:"
+#        #echo $values
 
 #        # Optional: exit if not found
 #        if [[ -z "$repo_data" ]]; then
