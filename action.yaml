@@ -105,7 +105,8 @@ runs:
             --method PUT \
             -H "Accept: application/vnd.github+json" \
             "/repos/$ORG_NAME/$REPO_NAME/properties/$key" \
-            -f value="$value"
+            -f "properties[][property_name]=last-update-by" \
+            -f "properties[][value]=example-team"
           done
         done < "$REPO_NAMES_FILE"
 
