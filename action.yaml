@@ -65,20 +65,24 @@ runs:
         repo_data=$(jq -r --arg name "$REPO_NAME" '
         .repositories[] | select(.name == $name)
         ' "$JSON_FILE")
-      
-        # Optional: exit if not found
-        if [[ -z "$repo_data" ]]; then
-          echo "Repository '$REPO_NAME' not found."
-          exit 1
-        fi
         
-        # Load all key-value pairs except 'name' into an associative array
-        declare -A repo_info
-        while IFS="=" read -r key value; do
-          repo_info["$key"]="$value"
-        done << (echo "$repo_data" | jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"')
+        echo "Repo data:"
+        echo ${repo_data}
+        cat ${repo_data}
         
-        # Output for debugging
-        for k in "${!repo_info[@]}"; do
-          echo "$k: ${repo_info[$k]}"
-        done
+#        # Optional: exit if not found
+#        if [[ -z "$repo_data" ]]; then
+#          echo "Repository '$REPO_NAME' not found."
+#          exit 1
+#        fi
+#
+#        # Load all key-value pairs except 'name' into an associative array
+#        declare -A repo_info
+#        while IFS="=" read -r key value; do
+#          repo_info["$key"]="$value"
+#        done << (echo "$repo_data" | jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"')
+#
+#        # Output for debugging
+#        for k in "${!repo_info[@]}"; do
+#          echo "$k: ${repo_info[$k]}"
+#        done
