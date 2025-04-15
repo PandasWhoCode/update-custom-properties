@@ -63,14 +63,16 @@ runs:
         
         # Extract matching repo object using jq
         repo_data=$(jq -r --arg name "$REPO_NAME" '
-        .repositories[] | select(.name == $name)
+        .repositories[]
+        | select(.name == $name)
+        | del(.name)
         ' "$JSON_FILE")
         
         echo "Repo data:"
         echo ${repo_data}
         
         # Extract all other key-value pairs (excluding "name")
-        jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}"
+        #jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}"
         #mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
   
         echo "Values are:"
