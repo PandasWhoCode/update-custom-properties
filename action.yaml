@@ -77,6 +77,12 @@ runs:
         while IFS= read -r REPO_NAME; do
           echo "Processing repo: $REPO_NAME"
           
+          # Check if the repo exists
+          if ! gh api "/repos/$ORG_NAME/$REPO_NAME" --silent > /dev/null 2>&1; then
+            echo "  Repository '$ORG_NAME/$REPO_NAME' does not exist. Skipping..."
+            continue
+          fi
+          
           # Extract matching repository object without the 'name' field
           repo_props=$(jq -r --arg name "$REPO_NAME" '
             .repositories[]
