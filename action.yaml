@@ -31,11 +31,12 @@ runs:
         echo "Repo owner: ${{ github.repository_owner }}"
         echo "Repo name: ${{ github.event.repository.name }}"
 
-    - name: Install tools
+    - name: Install yq (mikefarah's version)
       shell: bash
       run: |
-        sudo apt update
-        sudo apt install -y yq
+        sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+        sudo chmod +x /usr/bin/yq
+        yq --version  # sanity check
 
     - name: Parse repo-properties.yaml and export metadata
       shell: bash
