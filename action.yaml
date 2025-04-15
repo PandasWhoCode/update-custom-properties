@@ -100,12 +100,10 @@ runs:
           echo "Repo props are:"
           echo $repo_props
           
-          gh api --method PATCH -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$ORG_NAME/$REPO_NAME/properties/values -f "properties=$repo_props"
-          
           # Iterate over key-value pairs and set custom properties
           echo "$repo_props" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS="=" read -r key value; do
             echo "Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
             # API Call here
-            #gh api --method PATCH -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$ORG_NAME/$REPO_NAME/properties/values -f "properties[][property_name]=$key" -f "properties[][value]=$value"
+            gh api --method PATCH -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$ORG_NAME/$REPO_NAME/properties/values -f "properties[][property_name]=$key" -f "properties[][value]=$value"
           done
         done < "$REPO_NAMES_FILE"
