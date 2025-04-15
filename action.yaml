@@ -52,6 +52,7 @@ runs:
         # Get all fields for the matching repo (as a JSON object)
         yq eval -o=json repo-properties.yaml > repo-properties.json
         ls repo-properties.json
+        cat repo-properties.json
         echo "successfully created repo-properties.json"
 
     - name: Parse repo-properties.yaml and export metadata
@@ -75,7 +76,7 @@ runs:
         declare -A repo_info
         while IFS="=" read -r key value; do
           repo_info["$key"]="$value"
-        done < < (echo "$repo_data" | jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"')
+        done << (echo "$repo_data" | jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"')
         
         # Output for debugging
         for k in "${!repo_info[@]}"; do
