@@ -57,11 +57,11 @@ runs:
         echo ${YAML_FILE}
         
         # Get all fields for the matching repo (as a JSON object)
-        JSON_FILE=$(yq eval -o=json repo-properties.yaml)
+        yq eval -o=json repo-properties.yaml > JSON_FILE.json
         
         # Confirm the JSON file is correct
-        echo ${JSON_FILE}
+        echo JSON_FILE.json
         
-        repo_data=$(jq -r --arg name "$REPO_NAME" '.repositories[] | select(.name == $name)' "$JSON_FILE")
+        repo_data=$(jq -r --arg name "$REPO_NAME" '.repositories[] | select(.name == $name)' "JSON_FILE.json")
         echo ${repo_data}
 
