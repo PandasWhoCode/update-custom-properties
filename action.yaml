@@ -102,7 +102,7 @@ runs:
             echo "Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
             # API Call here
             gh api \
-            --method PUT \
+            --method PATCH \
             -H "Accept: application/vnd.github+json" \
             "/repos/$ORG_NAME/$REPO_NAME/properties/$key" \
             -f "properties[][property_name]=last-update-by" \
