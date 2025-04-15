@@ -101,6 +101,11 @@ runs:
           echo "$repo_props" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS="=" read -r key value; do
             echo "Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
             # API Call here
+            gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/$ORG_NAME/$REPO_NAME/properties/$key" \
+            -f value="$value"
           done
         done < "$REPO_NAMES_FILE"
 
