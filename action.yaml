@@ -55,7 +55,14 @@ runs:
         cat repo-properties.json
         echo "successfully created repo-properties.json"
 
-    - name: Parse repo-properties.yaml and export metadata
+    - name: Create list of repo names
+      shell: bash
+      run: |
+        jq -r '.repositories[].name' repo-properties.json > repo-names.txt
+        echo "Created repo-names.txt"
+        cat repo-names.txt
+
+    - name: Get current repo's
       shell: bash
       run: |
         REPO_NAME="my-example-repo"
