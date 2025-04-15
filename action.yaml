@@ -34,8 +34,8 @@ runs:
     - name: Install tools
       shell: bash
       run: |
-        sudo apt-get update
-        sudo apt-get install -y jq yq
+        sudo apt update
+        sudo apt install -y yq
 
     - name: Parse repo-properties.yaml and export metadata
       shell: bash
@@ -56,9 +56,10 @@ runs:
         echo ${YAML_FILE}
         
         # Get all fields for the matching repo (as a JSON object)
-        JSON=$(yq -o json ${YAML_FILE})
-        echo "Current JSON file is:"
-        echo ${JSON}
+        yq -o json repo-properties.yaml
+#        JSON=$(yq -o json ${YAML_FILE})
+#        echo "Current JSON file is:"
+#        echo ${JSON}
 
 #        # Remove the "name" field (not a property)
 #        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
