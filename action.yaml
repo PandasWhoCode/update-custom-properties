@@ -61,3 +61,7 @@ runs:
         
         # Confirm the JSON file is correct
         echo ${JSON_FILE}
+        
+        repo_data=$(jq -r --arg name "$REPO_NAME" '.repositories[] | select(.name == $name)' "$JSON_FILE")
+        echo ${repo_data}
+
