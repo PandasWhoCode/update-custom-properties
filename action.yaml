@@ -72,21 +72,23 @@ runs:
         JSON_FILE="repo-properties.json"
         
         # Extract matching repo object using jq
-        repo_data=$(jq -r --arg name "$REPO_NAME" '
-        .repositories[] | select(.name == $name)
-        ' "$JSON_FILE")
-
+        repo_data=$(jq -r --arg name "$REPO_NAME" '.repositories[] | select(.name == $name)' "$JSON_FILE")
+        
+        # print out the repo data
+        echo "Repo data is:"
+        echo repo_data
+        
         # Optional: exit if not found
         if [[ -z "$repo_data" ]]; then
           echo "Repository '$REPO_NAME' not found."
           exit 1
-          fi
+        fi
           
-          # Load the key-value pairs into an associative array
-          declare -A repo_info
-          while IFS="=" read -r key value; do
+        # Load the key-value pairs into an associative array
+        declare -A repo_info
+        while IFS="=" read -r key value; do
           repo_info["$key"]="$value"
-          done < <(echo "$repo_data" | jq -r 'to_entries[] | "\(.key)=\(.value)"')
+        done < <(echo "$repo_data" | jq -r 'to_entries[] | "\(.key)=\(.value)"')
           
           # Print for debugging
           for k in "${!repo_info[@]}"; do
