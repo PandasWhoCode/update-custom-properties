@@ -70,10 +70,11 @@ runs:
         echo ${repo_data}
         
         # Extract all other key-value pairs (excluding "name")
-        mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
+        jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}"
+        #mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
   
         echo "Values are:"
-        echo values
+        #echo $values
 
 #        # Optional: exit if not found
 #        if [[ -z "$repo_data" ]]; then
