@@ -70,16 +70,10 @@ runs:
         echo ${repo_data}
         
         # Extract all other key-value pairs (excluding "name")
-        mapfile -t properties << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "$repo_data")
+        mapfile -t values << (jq -r 'to_entries[] | select(.key != "name") | "\(.key)=\(.value)"' "${repo_data}")
   
-        # Set each property using the GitHub API
-        for kv in "${properties[@]}"; do
-          key="${kv%%=*}"
-          value="${kv#*=}"
-        
-          echo "Setting property '$key' = '$value' on repo '$REPO_NAME'"
-          # API Call here
-        done
+        echo "Values are:"
+        echo values
 
 #        # Optional: exit if not found
 #        if [[ -z "$repo_data" ]]; then
