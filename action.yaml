@@ -57,22 +57,3 @@ runs:
         
         # Get all fields for the matching repo (as a JSON object)
         yq -o json repo-properties.yaml
-#        JSON=$(yq -o json ${YAML_FILE})
-#        echo "Current JSON file is:"
-#        echo ${JSON}
-
-#        # Remove the "name" field (not a property)
-#        JSON_WITHOUT_NAME=$(echo "$JSON" | jq 'del(.name)')
-#        echo "Current JSON_WITHOUT_NAME file is:"
-#        echo ${JSON_WITHOUT_NAME}
-#
-#        echo "Setting these custom properties:"
-#        echo "${JSON_WITHOUT_NAME}"
-#
-#        curl -X PATCH "https://api.github.com/repos/$OWNER/$REPO_NAME/properties" \
-#          -H "Authorization: Bearer $GH_TOKEN" \
-#          -H "Accept: application/vnd.github+json" \
-#          -H "X-GitHub-Api-Version: 2022-11-28" \
-#          -H "Content-Type: application/json" \
-#          -d "$JSON_WITHOUT_NAME"
-        
