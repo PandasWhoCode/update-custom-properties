@@ -1,5 +1,5 @@
 name: 'Custom Properties Update Action'
-description: 'Updates the custom properties in a repository'
+description: 'Updates the custom properties for all repos in an org to values in org/governance/repo-properties.yaml'
 author: 'Andrew Brandt <andrew.brandt@hashgraph.com>'
 organization: 'PandasWhoCode'
 branding:
