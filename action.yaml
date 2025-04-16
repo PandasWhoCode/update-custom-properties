@@ -75,14 +75,13 @@ runs:
             echo "    Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
             # check to see if date here
             if [[ "$key" == *"-date"* || "$key" == "date-"* ]]; then
-              echo "Contains date: $key"
               if [[ "$value" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
-                echo "Valid date format"
+                continue
               else
                 echo "Repo name is: ${REPO_NAME}"
                 echo "Property name is: ${key}"
-                echo "Value is: ${value}"
-                echo "Invalid date format; Date needs to be formatted [YYYY-MM-DD]"
+                echo "Date Value is: ${value}"
+                echo "Invalid date format: Date needs to be formatted [YYYY-MM-DD]"
                 return 1
               fi
             fi
