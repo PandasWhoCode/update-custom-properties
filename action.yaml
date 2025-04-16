@@ -30,20 +30,16 @@ runs:
     - name: Convert from JSON to YAML
       shell: bash
       run: |
+        # Input filenames
         REPO_NAME=${{ github.event.repository.name }}
         YAML_FILE="repo-properties.yaml"
-        # Get all fields for the matching repo (as a JSON object)
+        
+        # Convert the YAML file to JSON for parsing
         yq eval -o=json repo-properties.yaml > repo-properties.json
-        ls repo-properties.json
-        cat repo-properties.json
-        echo "successfully created repo-properties.json"
 
     - name: Create list of repo names
       shell: bash
-      run: |
-        jq -r '.repositories[].name' repo-properties.json > repo-names.txt
-        echo "Created repo-names.txt"
-        cat repo-names.txt
+      run: jq -r '.repositories[].name' repo-properties.json > repo-names.txt
 
     - name: Set custom properties in repos
       shell: bash
