@@ -76,6 +76,7 @@ runs:
             # check to see if date here
             if [[ "$key" == *"date"* ]]; then
               echo "Contains date: $key"
+            fi
             # API Call here
             gh api --method PATCH -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" /repos/$ORG_NAME/$REPO_NAME/properties/values -f "properties[][property_name]=$key" -f "properties[][value]=$value"
           done
