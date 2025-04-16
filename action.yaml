@@ -79,7 +79,8 @@ runs:
               if [[ "$value" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
                 echo "Valid date format"
               else
-                echo "Invalid date format"
+                echo "Invalid date format; Date needs to be formatted [YYYY-MM-DD]"
+                return 1
               fi
             fi
             # API Call here
