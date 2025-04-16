@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of PaintBar seriously. If you believe you have found a security vulnerability, please report it to us as described below.
+We take the security of update-custom-properties seriously. If you believe you have found a security vulnerability, please report it to us as described below.
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
