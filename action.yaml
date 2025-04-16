@@ -18,30 +18,17 @@ runs:
   using: "composite"
 
   steps:
-    - name: Echo hello world
-      shell: bash
-      run: echo "Hello World"
-
-    - name: Print the current github information
-      shell: bash
-      run: |
-        echo "Current variables:"
-        echo "Full repo org/repo name: ${{ github.repository }}"
-        echo "Repo owner: ${{ github.repository_owner }}"
-        echo "Repo name: ${{ github.event.repository.name }}"
 
     - name: Install yq (mikefarah's version)
       shell: bash
       run: |
         sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
         sudo chmod +x /usr/bin/yq
-        yq --version  # sanity check
+        yq --version  # confirm installed
 
     - name: Install jq
       shell: bash
-      run: |
-        sudo apt update
-        sudo apt install -y jq
+      run: sudo apt install -y jq
 
     - name: Convert from JSON to YAML
       shell: bash
