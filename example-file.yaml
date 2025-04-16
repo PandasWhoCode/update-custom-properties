@@ -1,5 +1,17 @@
+# Place this file in the governance repo at the root level to run on the whole organization
 org: PandasWhoCode
+teams:
+  - lf-staff
+  - github-maintainers
+  - release-engineering
+  - security
+  - tsc
 repositories:
   - name: my-example-repo
-    last-update-by: "example-team"
-    last-date-modified: "2025-04-03"
+    last-date-modified: ""
+    initial-ci-review-by-team: "github-maintainers"
+    initial-ci-review-date: "2025-04-07"
+    initial-security-review-by-team: "security"
+    initial-security-review-date: "2025-04-15"
+    last-security-review-by-team: "tsc"
+    last-security-review-date: "2025-05-01"
