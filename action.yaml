@@ -19,14 +19,13 @@ runs:
     - name: Install yq (mikefarah's version)
       shell: bash
       run: |
-        sudo wget --no-verbose https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+        sudo wget --quiet https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
         sudo chmod +x /usr/bin/yq
-        echo "Installed yq"
         yq --version  # confirm installed
 
     - name: Install jq
       shell: bash
-      run: sudo apt install -y jq
+      run: sudo apt-get install -y jq
 
     - name: Convert from JSON to YAML
       shell: bash
