@@ -7,7 +7,7 @@ We currently support the following versions with security updates:
 |---------|------------------|
 
 ## Reporting a Vulnerability
-If you discover a security vulnerability, please report it privately by emailing [andrewb1269hg](mailto:andrew.brandt@hashgraph.com).  
+If you discover a security vulnerability, please report it privately by emailing [maintainers](mailto:maintainers@pandaswhocode.com).  
 Do not create a public issue to disclose the vulnerability.
 
 We will acknowledge receipt of your report within 48 hours and work on a fix as soon as possible.
