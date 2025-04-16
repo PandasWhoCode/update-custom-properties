@@ -1,6 +1,7 @@
 name: 'Custom Properties Update Action'
 description: 'Updates the custom properties in a repository'
 author: 'Andrew Brandt <andrew.brandt@hashgraph.com>'
+organization: 'PandasWhoCode'
 branding:
   icon: 'check-circle'
   color: 'purple'
@@ -9,10 +10,6 @@ inputs:
   token:
     description: 'Personal Access Token'
     required: true
-
-permissions:
-  contents: read
-  actions: read
 
 runs:
   using: "composite"
