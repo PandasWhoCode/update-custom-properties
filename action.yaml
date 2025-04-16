@@ -80,7 +80,7 @@ runs:
                 echo "Property name is: ${key}"
                 echo "Date Value is: ${value}"
                 echo "Invalid date format: Date needs to be formatted [YYYY-MM-DD]"
-                return 1
+                exit 1
               fi
             fi
             # API Call here
