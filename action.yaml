@@ -74,7 +74,7 @@ runs:
           echo "$repo_props" | jq -r 'to_entries[] | "\(.key)=\(.value)"' | while IFS="=" read -r key value; do
             echo "    Setting property '$key' = '$value' on $ORG_NAME/$REPO_NAME"
             # check to see if date here
-            if [[ "$key" == *-+"date"*-* ]]; then
+            if [[ "$key" == *"-date"* ]]; then
               echo "Contains date: $key"
             fi
             # API Call here
