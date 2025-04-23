@@ -35,10 +35,10 @@ fine-grained token with the following permissions:
 
 ## 📦 Inputs
 
-| Name                   | Description                                                       | Required | Default                |
-|------------------------|-------------------------------------------------------------------|----------|------------------------|
+| Name                   | Description                                                                                           | Required | Default                |
+|------------------------|-------------------------------------------------------------------------------------------------------|----------|------------------------|
 | `token`                | GitHub Personal Access Token (Fine-Grained with: Repository custom properties `Read and Write` scope) | ✅ Yes    | —                      |
-| `repo-properties.yaml` | File should be located in the root-level directory.               | ✅ Yes    | `repo-properties.yaml` |
+| `repo-properties.yaml` | File should be located in the root-level directory.                                                   | ✅ Yes    | `repo-properties.yaml` |
 
 ---
 
