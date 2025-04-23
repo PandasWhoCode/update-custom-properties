@@ -58,9 +58,9 @@ jobs:
 
 ---
 
-## Example custom_props.json
+## Example repo-properties.yaml
 
-`custom_props.json`:
+`repo-properties.yaml`:
 ```yaml
 org: PandasWhoCode
 repositories:
