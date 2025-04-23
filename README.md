@@ -23,7 +23,7 @@ fine-grained token with the following permissions:
 
 ### Organization Permissions
 
-- Read and Write access to organization custom properties
+- Read and Write access to repository custom properties
 
 ### Additional Information
 
@@ -37,7 +37,7 @@ fine-grained token with the following permissions:
 
 | Name                   | Description                                                       | Required | Default                |
 |------------------------|-------------------------------------------------------------------|----------|------------------------|
-| `token`                | GitHub Personal Access Token (Fine-Grained with `Read` org scope) | ✅ Yes    | —                      |
+| `token`                | GitHub Personal Access Token (Fine-Grained with: Repository custom properties `Read and Write` scope) | ✅ Yes    | —                      |
 | `repo-properties.yaml` | File should be located in the root-level directory.               | ✅ Yes    | `repo-properties.yaml` |
 
 ---
