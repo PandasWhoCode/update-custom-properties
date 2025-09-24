@@ -13,7 +13,7 @@ inputs:
   sleep-length:
     description: 'Time to sleep (sec) between API calls'
     required: false
-    default: '1'
+    default: '0'
 
 runs:
   using: "composite"
