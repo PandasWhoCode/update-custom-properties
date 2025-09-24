@@ -55,7 +55,7 @@ jobs:
       - uses: PandasWhoCode/update-custom-properties@v1
         with:
           token: ${{ secrets.GH_CUSTOM_PROPERTIES_TOKEN }}
-          sleep-length: 5
+          sleep-length: '5'
 ```
 
 ---
