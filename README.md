@@ -36,9 +36,10 @@ fine-grained token with the following permissions:
 ## 📦 Inputs
 
 | Name                   | Description                                                                                           | Required | Default                |
-|------------------------|-------------------------------------------------------------------------------------------------------|----------|------------------------|
-| `token`                | GitHub Personal Access Token (Fine-Grained with: Repository custom properties `Read and Write` scope) | ✅ Yes    | —                      |
-| `repo-properties.yaml` | File should be located in the root-level directory.                                                   | ✅ Yes    | `repo-properties.yaml` |
+|------------------------|-------------------------------------------------------------------------------------------------------|-------|------------------------|
+| `token`                | GitHub Personal Access Token (Fine-Grained with: Repository custom properties `Read and Write` scope) | ✅  | —                      |
+| `repo-properties.yaml` | File should be located in the root-level directory.                                                   | ✅  | `repo-properties.yaml` |
+| `sleep-length`         | Time (seconds) to sleep between API calls                                                             | -   | `1 second`             
 
 ---
 
@@ -54,6 +55,7 @@ jobs:
       - uses: PandasWhoCode/update-custom-properties@v1
         with:
           token: ${{ secrets.GH_CUSTOM_PROPERTIES_TOKEN }}
+          sleep-length: '5'
 ```
 
 ---
